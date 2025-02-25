@@ -1,3 +1,6 @@
+'use client'
+
+import { startTransition, SyntheticEvent, useState } from 'react';
 import {sql} from 'drizzle-orm';
 import {db} from '@/db';
 
@@ -6,10 +9,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+import { createAction } from "@/app/actions";
+import SubmitButton from '@/components/SubmitButton';
 
-const Home = async () => {
-    const results = await db.execute(sql`SELECT current_database()`);
-    console.log("results are:", results);
+
+const Home = () => {
+    const [state, setState] = useState('ready');
+
+    const handleOnSubmit = async (e: SyntheticEvent) => {
+        e.preventDefault();
+
+        if(state === 'pending') return;
+        setState('pending');
+        const target = e.target as HTMLFormElement;
+
+
+        startTransition(async () => {
+        const formData = new FormData(target);
+        await createAction(formData);
+        });
+    }
+
     return (
         <main className="flex flex-col justify-center h-full gap-6 max-w-5xl mx-auto my-12">
             <div className="flex justify-between">
@@ -18,9 +38,8 @@ const Home = async () => {
                 </h1>
             </div>
 
-          { JSON.stringify(results) }
 
-            <form className="grid gap-4 max-w-xs">
+            <form action={createAction} onSubmit={handleOnSubmit} className="grid gap-4 max-w-xs">
                 <div>
                     <Label htmlFor="name" className="block font-semibold mb-2 text-sm">Billing Name</Label>
                     <Input id="name" name="name" type="text" />
@@ -38,9 +57,7 @@ const Home = async () => {
                     <Textarea id="description" name="description" />
                 </div>
                 <div>
-                    <Button className="font-semibold py-2 px-4 rounded w-full">
-                        Submit
-                    </Button>
+                    <SubmitButton />
                 </div>
             </form>
         </main>
