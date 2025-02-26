@@ -7,9 +7,10 @@ import { redirect } from "next/navigation";
 
 export async function createAction(formData: FormData) {
     console.log('formdata', formData);
-    const value = Math.floor(parseFloat(String(formData.get('value'))) * 100);
+    const valueEntry = formData.get('value');
+    const value = valueEntry !== null && !isNaN(Number(valueEntry)) ? Math.floor(parseFloat(String(valueEntry)) * 100) : 0;
     const description = formData.get('description') as string;
-    const name = formData.get('name') as string;
+
     
     // if (isNaN(value)) {
     //     throw new Error('Invalid value: must be a number');
