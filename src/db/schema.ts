@@ -8,5 +8,6 @@ export const Invoices = pgTable('invoices', {
     updateTs: timestamp('updateTs').notNull().defaultNow(),
     value: integer('value').notNull(),
     description: text('description').notNull(),
+    userId: text('userId').notNull(),
     status: statusEnum('status').notNull().default('open'),
     });

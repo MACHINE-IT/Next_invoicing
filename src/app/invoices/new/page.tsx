@@ -16,10 +16,10 @@ const Home = () => {
     const [state, setState] = useState('ready');
 
     const handleOnSubmit = async (e: SyntheticEvent) => {
-        e.preventDefault();
-
+        // e.preventDefault();
+        console.log('state', state);
         if (state === 'pending') {
-            e.preventDefault();
+            // e.preventDefault();
             return;
         };
         setState('pending');
